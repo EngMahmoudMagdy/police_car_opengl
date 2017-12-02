@@ -1,0 +1,12 @@
+﻿  main.cpp
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(25): warning C4615: #pragma warning: unknown user warning type
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(150): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(164): warning C4018: '<': signed/unsigned mismatch
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(173): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(176): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(183): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(186): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(195): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\engma\source\repos\objectloader\objectloader\main.cpp(198): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  ObjectLoader.vcxproj -> C:\Users\engma\source\repos\ObjectLoader\Debug\ObjectLoader.exe
+  ObjectLoader.vcxproj -> C:\Users\engma\source\repos\ObjectLoader\Debug\ObjectLoader.pdb (Partial PDB)
