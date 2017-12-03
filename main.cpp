@@ -23,7 +23,7 @@ using namespace std ;
    };
 GLuint ltexture, basetextureid;
 #pragma warning(diable:4996)
-const float FLOOR_TEXTURE_SIZE = 200.0f; //The size of each floor "tile"
+const float FLOOR_TEXTURE_SIZE = 100.0f; //The size of each floor "tile"
 float _guyPos = 0;
 void CreateTexture(UINT &texture, LPSTR strFileName)
 {
