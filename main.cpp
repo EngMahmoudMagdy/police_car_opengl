@@ -3,6 +3,7 @@
 #include<windows.h>
 #include<gl/freeglut.h>
 #include<gl/glaux.h>
+#include <string.h>
 #   pragma comment (lib, "glaux.lib")    /* link with Win32 GLUT lib */
 #include <stdio.h>
 #include <share.h>
@@ -21,9 +22,11 @@ using namespace std ;
 	   -10, -10,
 	   10, -10
    };
+   GLfloat lightColor[] = { 0.5f,0.5f,0.5f,1.0f };
+   GLfloat lightPos[] = { 8.0f,0,8.0f,1.0f };
 GLuint ltexture, basetextureid;
 #pragma warning(diable:4996)
-const float FLOOR_TEXTURE_SIZE = 100.0f; //The size of each floor "tile"
+const float FLOOR_TEXTURE_SIZE = 50.0f; //The size of each floor "tile"
 float _guyPos = 0;
 void CreateTexture(UINT &texture, LPSTR strFileName)
 {
@@ -65,6 +68,28 @@ void charKey(unsigned char k,int x,int y)
 	break;
 
 	}
+}
+void drawText(const char *text, GLfloat x, GLfloat y)
+{
+	//glBegin(GL_2D);
+	//glutSwapBuffers();
+	glMatrixMode(GL_PROJECTION);
+	double *matrix = new double[16];
+	glGetDoublev(GL_PROJECTION_MATRIX, matrix);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glPushMatrix();
+	glRasterPos3f(x, y,0);
+	for (int i = 0; i < strlen(text); i++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
+	}
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixd(matrix);
+	glMatrixMode(GL_MODELVIEW);
+	//glEnd();
 }
 GLuint loadTexture(const char * filename)
 {
@@ -118,33 +143,33 @@ GLuint loadTexture(const char * filename)
 
 	return  texture;
 }
+float angle = 0;
 void drawbase(float vertices1[], GLuint texture)
 {
-	/*glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
+
 	glTranslatef(0.0f, 0.0f, -80.0f);
 	glEnable(GL_TEXTURE_2D);
+
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBegin(GL_QUADS);
-	//glutSwapBuffers();
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, _guyPos / FLOOR_TEXTURE_SIZE);
 	glVertex3f(-1000.0f, 0.0f, -1000.0f);
-	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE,
-		(2000 + _guyPos) / FLOOR_TEXTURE_SIZE);
+	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE,(2000 + _guyPos) / FLOOR_TEXTURE_SIZE);
 	glVertex3f(-1000.0f, 0.0f, 1000.0f);
 	glTexCoord2f(0.0f, (2000 + _guyPos) / FLOOR_TEXTURE_SIZE);
 	glVertex3f(1000.0f, 0.0f, 1000.0f);
 	glTexCoord2f(0.0f, _guyPos / FLOOR_TEXTURE_SIZE);
 	glVertex3f(1000.0f, 0.0f, -1000.0f);
-
 	glEnd();
+	
 }
-float angle=0;
+
 void display(void)
 {
+	
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	angle+=0.3;
@@ -159,7 +184,6 @@ void display(void)
 	glEnable(GL_TEXTURE_2D);
 	}
 	glBegin(GL_TRIANGLES);
-	
 	{
 		for(int i=0;i<model.vectorOfFace.size();i++)
 		{
@@ -199,15 +223,21 @@ void display(void)
 		}
 	}
 	glEnd();
+	
 	drawbase(basevertices, basetextureid);
+	
+
+	glColor3f(1, 1, 1);
+	drawText("Hello world", -0.9f, 0.9f);
+	//text
 	glutPostRedisplay();
 	glutSwapBuffers();
 	//Update _guyPos
-	_guyPos += 5;
+	_guyPos += 15;
 	while (_guyPos > FLOOR_TEXTURE_SIZE) {
 		_guyPos -= FLOOR_TEXTURE_SIZE;
 	}
-	//glFlush();
+	glFlush();
 }
 
 void reshape (int w, int h)
@@ -221,7 +251,6 @@ void reshape (int w, int h)
 	glLoadIdentity();
 
  }
-
 int main(int argc, char** argv)
 {
 
@@ -230,57 +259,19 @@ int main(int argc, char** argv)
    glutInitWindowSize (400, 400); 
    glutInitWindowPosition (100, 100);
    
-   if(model.load("policecar.obj"))
-   {
-	   // for debugging
-	  /* for(int i=0;i<model.vectorOfVertex.size();i++)
-	   {
-		         cout<<model.vectorOfVertex[i].x<<"    "<<
-			     model.vectorOfVertex[i].y<<"    "<<
-			     model.vectorOfVertex[i].z<<endl;
-	   }
-	   cout<<"---------------texture---------------"<<endl;
-
-	   for(int i=0;i<model.vectorOfTexture.size();i++)
-	   {
-			     cout<<model.vectorOfTexture[i].s<<"    "<<
-			     model.vectorOfTexture[i].t<<"    "<<
-			     model.vectorOfTexture[i].r<<endl;
-	   }
-	   cout<<"---------------normal---------------"<<endl;
-	   for(int i=0;i<model.vectorOfNormal.size();i++)
-	   {
-		  	     cout<<model.vectorOfNormal[i].xn<<"    "<<
-			     model.vectorOfNormal[i].yn<<"    "<<
-			     model.vectorOfNormal[i].zn<<endl;
-	   }
-		cout<<"---------------face---------------"<<endl;
-	   for(int i=0;i<model.vectorOfFace.size();i++)
-	   {
-		   cout<<model.vectorOfFace[i].firstVertex[0]<<","<<
-				 model.vectorOfFace[i].firstVertex[1]<<","<<
-				 model.vectorOfFace[i].firstVertex[2]<<"    ";
-		   cout<<model.vectorOfFace[i].secondVertex[0]<<","<<
-				 model.vectorOfFace[i].secondVertex[1]<<","<<
-				 model.vectorOfFace[i].secondVertex[2]<<"    ";
-		   cout<<model.vectorOfFace[i].thirdVertex[0]<<","<<
-				 model.vectorOfFace[i].thirdVertex[1]<<","<<
-				 model.vectorOfFace[i].thirdVertex[2]<<"    ";
-	   cout<<endl;
-	   }
-	   */
-
-   }
+   model.load("policecar.obj");
    glutCreateWindow ("wavefront file loader ");
    glEnable(GL_DEPTH_TEST);
-   glEnable(GL_LIGHT0);	
    glEnable(GL_LIGHTING);	
+   glEnable(GL_LIGHT0);
    glEnable(GL_COLOR_MATERIAL);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, lightColor);
+   glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
    glColor3f(1,1,1);
    glClearColor(0,0,0,1);
-   //CreateTexture(id,"spaceshiptexture.bmp");
    CreateTexture(id, "policecar2.bmp");
    basetextureid = loadTexture("asphalt.bmp");
+   
    glutDisplayFunc(display); 
 
    glutReshapeFunc(reshape);
